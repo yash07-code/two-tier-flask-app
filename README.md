@@ -116,15 +116,74 @@ docker run -d \
 
 ```
 
-## Notes
 
-- Make sure to replace placeholders (e.g., `your_username`, `your_password`, `your_database`) with your actual MySQL configuration.
+# 🚀 Two-Tier Flask–MySQL Application on AWS EKS
 
-- This is a basic setup for demonstration purposes. In a production environment, you should follow best practices for security and performance.
+This project showcases the deployment of a **cloud-native, containerized two-tier web application** using **Flask** (frontend) and **MySQL** (backend) on **Amazon EKS (Elastic Kubernetes Service)**. Built with DevOps best practices and infrastructure-as-code, this setup ensures scalability, modularity, and high availability on AWS Cloud.
 
-- Be cautious when executing SQL queries directly. Validate and sanitize user inputs to prevent vulnerabilities like SQL injection.
+---
 
-- If you encounter issues, check Docker logs and error messages for troubleshooting.
+## 🎯 Project Objective
 
-```
+To build and deploy a real-world, production-ready microservice application on Kubernetes using:
+- **eksctl** for provisioning AWS EKS clusters
+- **kubectl** and YAML manifests for managing application workloads
+- **Docker** for containerization
+- **Flask** and **MySQL** to simulate a real-world web service with persistent storage
+
+
+## 🏗️ Architecture Overview
+Client
+│
+▼
+[Flask Web App - Frontend (Docker)]
+│
+▼
+[MySQL Database - Backend (Docker)]
+│
+▼
+[Kubernetes Cluster - Amazon EKS]
+└── Managed Node Groups
+└── IAM Roles, Networking (VPC, Subnets)
+
+## 🧰 Tech Stack & Tools
+
+| Category            | Tools/Tech                         |
+|---------------------|------------------------------------|
+| Cloud               | AWS EKS, IAM, VPC, EC2             |
+| Containerization    | Docker                             |
+| Container Orchestration | Kubernetes, kubectl, eksctl       |
+| Application Layer   | Flask (Python)                     |
+| Database Layer      | MySQL                              |
+| IaC & Config        | Kubernetes YAML Manifests          |
+| Monitoring (Future) | Metrics Server, Prometheus, Grafana|
+
+✅ 1. Setup Prerequisites
+Install eksctl, kubectl, AWS CLI
+Configure AWS credentials: aws configure
+
+✅ 2. Create EKS Cluster
+      command: eksctl create cluster -f eks-manifests/cluster-config.yaml
+✅ 3. Deploy App to EKS
+      command:kubectl apply -f k8s/
+✅ 4. Verify Resources
+      command:kubectl get pods
+              kubectl get svc
+              kubectl get pvc
+✅ 5. Access the Application
+       command: kubectl port-forward svc/flask-service 5000:5000
+
+🌱 Future Enhancements
+  1.Integrate Jenkins or GitHub Actions for CI/CD
+  2.Use Helm Charts for better deployment management
+  3.Add Prometheus + Grafana for real-time monitoring
+  4.Enable SSL termination + Ingress controller
+  5.Persist MySQL data with AWS EBS volumes
+  6.Deploy with ArgoCD for GitOps-based delivery
+
+📄 License
+This project is licensed under the MIT License. Feel free to fork and experiment
+
+
+
 
