@@ -9,7 +9,7 @@ jobs:
       - run:
           name: Install kubectl
           command: |
-           "sudo snap install kubectl --classic"
+           sudo snap install kubectl --classic
       - run:
           name: Configure AWS credentials
           command: |
