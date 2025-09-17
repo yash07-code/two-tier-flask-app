@@ -1,0 +1,38 @@
+version: 2.1
+jobs:
+  deploy:
+    docker:
+      - image: cimg/base:stable   # basic Linux image
+    steps:
+      - checkout
+
+      - run:
+          name: Install kubectl
+          command: |
+            curl -LO "https://dl.k8s.io/release/$(curl -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+            chmod +x kubectl
+            sudo mv kubectl /usr/local/bin/
+
+      - run:
+          name: Configure AWS credentials
+          command: |
+            mkdir -p ~/.aws
+            echo "[default]" > ~/.aws/credentials
+            echo "aws_access_key_id=$AWS_ACCESS_KEY_ID" >> ~/.aws/credentials
+            echo "aws_secret_access_key=$AWS_SECRET_ACCESS_KEY" >> ~/.aws/credentials
+            echo "[default]" > ~/.aws/config
+            echo "region=$AWS_REGION" >> ~/.aws/config
+
+      - run:
+          name: Update kubeconfig
+          command: |
+            aws eks update-kubeconfig --region $AWS_REGION --name $EKS_CLUSTER_NAME
+
+      - run:
+          name: Deploy to Kubernetes
+          command: kubectl apply -f k8s/
+
+workflows:
+  deploy_workflow:
+    jobs:
+      - deploy
