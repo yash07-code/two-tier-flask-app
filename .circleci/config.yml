@@ -1,4 +1,5 @@
 version: 2.1
+
 jobs:
   deploy:
     docker:
@@ -7,9 +8,29 @@ jobs:
       - checkout
 
       - run:
+          name: Install dependencies
+          command: |
+            sudo apt-get update && sudo apt-get install -y curl unzip
+
+      - run:
           name: Install kubectl
           command: |
-           sudo snap install kubectl --classic
+            set -e
+            KUBECTL_VERSION=$(curl -s https://dl.k8s.io/release/stable.txt)
+            echo "Downloading kubectl version: $KUBECTL_VERSION"
+            curl -LO "https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl"
+            chmod +x kubectl
+            sudo mv kubectl /usr/local/bin/
+            kubectl version --client
+
+      - run:
+          name: Install AWS CLI
+          command: |
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
+            aws --version
+
       - run:
           name: Configure AWS credentials
           command: |
@@ -27,7 +48,8 @@ jobs:
 
       - run:
           name: Deploy to Kubernetes
-          command: kubectl apply -f k8s/
+          command: |
+            kubectl apply -f k8s/
 
 workflows:
   deploy_workflow:
