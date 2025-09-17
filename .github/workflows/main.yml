@@ -31,4 +31,4 @@ jobs:
         file: ./Dockerfile          # adjust if your Dockerfile name/path differs
         push: true
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/two-tier-flask:${{ github.sha }}
-        # optionally add: tags: ${{ secrets.DOCKERHUB_USERNAME }}/two-tier-flask:latest
+        
